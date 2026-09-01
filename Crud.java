@@ -3,9 +3,16 @@ import java.util.Scanner;
 public class Crud {
 
     public void create() {
-        System.out.println("Qual o ID");
         Scanner le = new Scanner(System.in);
-        int id = le.nextInt();
+        System.out.println("Qual o ID");
+        String id = le.nextLine();
+        System.out.println("Qual o nome do artista");
+        String artista = le.nextLine();
+        System.out.println("Qual o nome da música");
+        String musica = le.nextLine();
+        System.out.println("Qual a Popularidade");
+        int popularidade = le.nextInt();
+        Objet obj= new Objet(id, artista, musica, popularidade);
 
         le.close();
     }

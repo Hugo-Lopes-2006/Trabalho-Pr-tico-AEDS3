@@ -10,26 +10,26 @@ public class Main {
         System.out.println("4. Delete");
         System.out.println("5. Ordenar");
         System.out.println("6. Sair");
+        Crud crud=new Crud();
 
         int opcao = le.nextInt();
         switch (opcao) {
             case 1:
-                Create();
+                crud.create();
                 break;
             case 2:
-                Read();
+                crud.read();
                 break;
             case 3:
-                Update();
+                crud.update();
                 break;
             case 4:
-                Delete();
+                crud.delete();
                 break;
             case 5:
-                Ordenar();
+
                 break;
             case 6:
-                Sair();
                 break;
             default:
 
