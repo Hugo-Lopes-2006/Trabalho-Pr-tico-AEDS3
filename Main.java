@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner le = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
         System.out.println("Selecione a opção desejada:");
         System.out.println("1. Create");
         System.out.println("2. Read");
@@ -12,31 +12,39 @@ public class Main {
         System.out.println("6. Sair");
         Crud crud=new Crud();
 
-        int opcao = le.nextInt();
+        int opcao = sc.nextInt();
+        int id;
         switch (opcao) {
-            case 1:
-                crud.create();
-                break;
-            case 2:
-                crud.read();
-                break;
-            case 3:
-                crud.update();
-                break;
-            case 4:
-                crud.delete();
-                break;
-            case 5:
-
-                break;
-            case 6:
-                break;
-            default:
-
-                break;
+            case 1 -> {
+                //ler path?(talvez, tem q ver com o hayala)
+                System.out.println("Qual o path do arquivo csv?");
+                String path=sc.next();
+                crud.create(path);
+            }
+            case 2 -> {
+                System.out.println("Qual o ID do registro?");
+                id=sc.nextInt();
+                crud.read(id);
+            }
+            case 3 -> {
+                System.out.println("Qual o ID do registro?");
+                id=sc.nextInt();
+                crud.update(id);
+            }
+            case 4 -> {
+                System.out.println("Qual o ID do registro?");
+                id=sc.nextInt();
+                crud.delete(id);
+            }
+            case 5 -> {
+            }
+            case 6 -> {
+            }
+            default -> {
+            }
         }
 
-        le.close();
+        sc.close();
 
     }
 }

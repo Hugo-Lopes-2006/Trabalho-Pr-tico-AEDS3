@@ -6,14 +6,12 @@ import java.util.Scanner;
 public class LeitorCsv {
     public void lerCsv(String path) throws FileNotFoundException, IOException {
         File arquivo = new File(path);
-        Scanner le = new Scanner(arquivo);
-        if(le.hasNextLine()){
-            le.nextLine();
+        Scanner sc = new Scanner(arquivo);
+        sc.nextLine(); //primeira linha é lixo
+
+        while(sc.hasNext()){
+            Objeto objeto = Objeto.parseObjeto(sc.nextLine());
         }
-        Objet objeto = new Objet();
-        objeto = objeto.parseObjet(le.nextLine());
-        Binar salvando= new Binar();
-        salvando.escrever(objeto);
-        le.close();
+        
     }
 }
