@@ -4,44 +4,70 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Selecione a opção desejada:");
-        System.out.println("1. Create");
-        System.out.println("2. Read");
-        System.out.println("3. Update");
-        System.out.println("4. Delete");
-        System.out.println("5. Ordenar");
-        System.out.println("6. Sair");
-        Crud crud=new Crud();
+        while(true){
+            System.out.println("Selecione a opção desejada:");
+            System.out.println("1. Create");
+            System.out.println("2. Read");
+            System.out.println("3. Update");
+            System.out.println("4. Delete");
+            System.out.println("5. Ordenar");
+            System.out.println("6. Sair");
+            Crud crud=new Crud();
 
-        int opcao = sc.nextInt();
-        int id;
-        switch (opcao) {
-            case 1 -> {
-                crud.create();
-            }
-            case 2 -> {
-                System.out.println("Qual o ID do registro?");
-                id=sc.nextInt();
-                crud.read(id);
-            }
-            case 3 -> {
-                System.out.println("Qual o ID do registro?");
-                id=sc.nextInt();
-                crud.update(id);
-            }
-            case 4 -> {
-                System.out.println("Qual o ID do registro?");
-                id=sc.nextInt();
-                crud.delete(id);
-            }
-            case 5 -> {
-            }
-            case 6 -> {
-            }
-            default -> {
+            int opcao = sc.nextInt();
+            int id;
+            switch (opcao) {
+                case 1 -> {
+                    crud.create();
+                }
+                case 2 -> {
+                    System.out.println("Qual o ID da musica?");
+                    id=sc.nextInt();
+                    crud.read(id);
+                    break;
+                }
+                case 3 -> {
+                    System.out.println("Qual o ID da musica?");
+                    id=sc.nextInt();
+
+                    System.out.println("Qual o Track ID da musica?");
+                    String track_id=sc.next();
+
+                    System.out.println("Quantos artistas?");
+                    int tmp=sc.nextInt();
+                    String[] artists=new String[tmp];
+                    sc.nextLine();
+                    for(int i=0;i<tmp;i++){
+                        System.out.print("Nome do artista: ");
+                        artists[i]=sc.nextLine();
+                        System.out.println();
+                    }
+
+                    System.out.println("Qual o nome da musica?");
+                    String track_name=sc.nextLine();
+
+                    System.out.println("Qual a popularidade da musica?");
+                    int popularity=sc.nextInt();
+
+                    System.out.println("Que dia e hoje? (formato: dd-MM-yyyy) ");
+                    String date=sc.next();
+
+                    Objeto objeto=new Objeto(track_id, artists, track_name, popularity, date, id);
+
+                    crud.update(objeto.getId(),objeto);
+                }
+                case 4 -> {
+                    System.out.println("Qual o ID da musica?");
+                    id=sc.nextInt();
+                    crud.delete(id);
+                }
+                case 5 -> {
+                }
+                case 6 -> {
+                }
+                default -> {
+                }
             }
         }
-
-
     }
 }

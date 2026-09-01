@@ -7,10 +7,11 @@ import java.util.Scanner;
 class LeitorCsv {
     public static void escrever(RandomAccessFile raf,Objeto objeto)throws IOException {
 
-        byte[] ba;
-        ba=objeto.toByteArray();
-        raf.writeInt(ba.length);
-        raf.write(ba);
+        byte[] ba;//cria array de byte
+        ba=objeto.toByteArray();//carrega o array de byte gerado pelo objeto
+        raf.writeByte(0);//escreve lápide
+        raf.writeInt(ba.length);//escreve o tamanho do array/registro
+        raf.write(ba);//escreve o registro
 
     }
     public static void lerCsv(String path) throws FileNotFoundException, IOException {
@@ -20,10 +21,17 @@ class LeitorCsv {
 
         RandomAccessFile registros=new RandomAccessFile("spotify.bin","rw");
 
+        registros.writeInt(0);//cabeçalho
+        int id=0;
+
         while(sc.hasNext()){
-            Objeto objeto = Objeto.parseObjeto(sc.nextLine());
-            escrever(registros, objeto);
+            Objeto objeto = Objeto.parseObjeto(sc.nextLine(),id);//lê linha e cria objeto
+            escrever(registros, objeto);//escreve objeto
+            id++;
         }
+
+        registros.seek(0);
+        registros.writeInt(id-1);//atualiza cabeçalho pra o ultimo id colocado
 
         registros.close();
     }

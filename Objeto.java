@@ -10,13 +10,15 @@ import java.util.Scanner;
 
 class Objeto {
 
+    private int id; //id
     private String track_id; //string de tamanho fixo
     private String[] artists; //lista de valores com separador a definir
     private String track_name; //string de tamanho variavel
     private int popularity; //int ou float
     private String date; //data de carga
 
-    public Objeto(String track_id, String[] artists, String track_name, int popularity, String date) {
+    public Objeto(String track_id, String[] artists, String track_name, int popularity, String date, int id) {
+        this.id=id;
         this.track_id = track_id;
         this.artists = artists;
         this.track_name = track_name;
@@ -24,7 +26,16 @@ class Objeto {
         this.date=date;
     }//construtor
 
-    public static Objeto parseObjeto(String linha) {
+    public Objeto(){
+        this.id=-1;
+        this.track_id=null;
+        this.artists=null;
+        this.track_name=null;
+        this.popularity=-1;
+        this.date=null;
+    }
+
+    public static Objeto parseObjeto(String linha,int id) {
         Scanner sc = new Scanner(linha);
         sc.useDelimiter(",");
         String track_id = sc.next(); //ler track_id
@@ -83,7 +94,7 @@ class Objeto {
         String date = dateNow.format(formatador);//formatar para string
 
         
-        return new Objeto(track_id, artists, track_name, popularity,date);
+        return new Objeto(track_id, artists, track_name, popularity,date, id);
     }//parse: recebe linha do arquivo, transforma em objeto
 
     //metodos get
@@ -107,10 +118,15 @@ class Objeto {
         return date;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
+        dos.writeInt(id);//escreve id
         dos.writeUTF(track_id);//escreve track_id
 
         int tmp=artists.length;//define quantidade de nomes a serem escritos
@@ -123,6 +139,8 @@ class Objeto {
         dos.writeInt(popularity);//escreve_popoularity
         dos.writeUTF(date);//escreve date
 
+        dos.flush();
+
         return baos.toByteArray();
     }
 
@@ -130,9 +148,11 @@ class Objeto {
         ByteArrayInputStream bais = new ByteArrayInputStream(ba);
         DataInputStream dis=new DataInputStream(bais);
 
+        id=dis.readInt();
         track_id=dis.readUTF();
 
         int tmp=dis.readInt();
+        artists=new String[tmp];
         for(int i=0;i<tmp;i++){
             artists[i]=dis.readUTF();
         }
@@ -140,6 +160,18 @@ class Objeto {
         track_name=dis.readUTF();
         popularity=dis.readInt();
         date=dis.readUTF();
+    }
+
+    public void formatar(){
+        System.out.println("ID: "+id);
+        System.out.println("Track ID: "+track_id);
+        System.out.print("Artists: ");
+        for(int i=0;i<artists.length;i++){
+            System.out.println(artists[i]);
+        }
+        System.out.println("Track Name: "+track_name);
+        System.out.println("Popularity: "+popularity);
+        System.out.println("Date: "+date);
     }
 
 }
