@@ -5,12 +5,13 @@ import java.io.RandomAccessFile;
 import java.util.Scanner;
 
 class LeitorCsv {
-    public static void escrever(RandomAccessFile raf,Objeto objeto)throws IOException {
+    public static void escrever(RandomAccessFile raf,Objeto objeto, int id)throws IOException {
 
         byte[] ba;//cria array de byte
         ba=objeto.toByteArray();//carrega o array de byte gerado pelo objeto
         raf.writeByte(0);//escreve lápide
         raf.writeInt(ba.length);//escreve o tamanho do array/registro
+        raf.writeInt(id);//escreve id
         raf.write(ba);//escreve o registro
 
     }
@@ -26,7 +27,7 @@ class LeitorCsv {
 
         while(sc.hasNext()){
             Objeto objeto = Objeto.parseObjeto(sc.nextLine(),id);//lê linha e cria objeto
-            escrever(registros, objeto);//escreve objeto
+            escrever(registros, objeto,id);//escreve objeto
             id++;
         }
 

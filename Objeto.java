@@ -122,11 +122,11 @@ class Objeto {
         return id;
     }
 
+
     public byte[] toByteArray() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
-        dos.writeInt(id);//escreve id
         dos.writeUTF(track_id);//escreve track_id
 
         int tmp=artists.length;//define quantidade de nomes a serem escritos

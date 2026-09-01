@@ -5,10 +5,24 @@ import java.io.RandomAccessFile;
 class Crud {
 
 
-    public void create() throws FileNotFoundException, IOException { //fazer a carga inicial com o arquivo csv
+    public void create(Objeto objeto) throws FileNotFoundException, IOException { //fazer a carga inicial com o arquivo csv
 
-        LeitorCsv.lerCsv("spotify.csv");
+        RandomAccessFile raf=new RandomAccessFile("spotify.bin","rw");
+        byte[] ba;//cria array de byte
+        ba=objeto.toByteArray();//carrega o array de byte gerado pelo objeto
 
+        raf.seek(0);
+        int id=raf.readInt()+1;//pega o seguinte ao ultimo
+        raf.seek(0);
+        raf.writeInt(id);//conserta o cabeçalho
+
+        raf.seek(raf.length());//vai para o fim do arquivo
+        raf.writeByte(0);//escreve lápide
+        raf.writeInt(ba.length);//escreve o tamanho do array/registro
+        raf.writeInt(id);//escreve o id
+        raf.write(ba);//escreve o registro
+
+        raf.close();
     }
 
     public void read(int id) throws FileNotFoundException, IOException {
@@ -18,7 +32,7 @@ class Crud {
         boolean found=false;//se achar para de procurar no arquivo
         while(!found && raf.getFilePointer()<raf.length()){
             int lapide=raf.readByte();//ler lapide
-            int tam=raf.readInt();//ler tamanho do registro
+            int tam=raf.readInt()+4;//ler tamanho do registro
             byte[] ba = new byte[tam];//ler registro
             raf.read(ba);
             if(lapide==0){
@@ -33,8 +47,8 @@ class Crud {
         if(!found){
             System.out.println("Arquivo nao encontrado");
         }
-        raf.seek(0);
-        raf.writeInt(id);
+
+        raf.close();
     }
 
     public void update(int id, Objeto objetoAtualizado) throws IOException {
@@ -42,9 +56,9 @@ class Crud {
         raf.readInt();//lê o cabeçalho
         boolean found=false;//se achar para de procurar no arquivo
         while(!found && raf.getFilePointer()<raf.length()){
-            int lapide=raf.readByte();//ler lapide
-            int tam=raf.readInt();//ler tamanho do registro
             long p1=raf.getFilePointer();//salva endereço para voltar aqui
+            int lapide=raf.readByte();//ler lapide
+            int tam=raf.readInt()+4;//ler tamanho do registro
             byte[] ba = new byte[tam];//ler registro
             raf.read(ba);
 
@@ -55,11 +69,11 @@ class Crud {
                     byte[] ba1=objetoAtualizado.toByteArray();//cria array de bytes do objeto novo
                     if(ba1.length<=ba.length){//se o novo couber no espaço do antigo
                         raf.seek(p1);
-                        raf.write(ba1);//escreve o novo sobre o antigo
+                        LeitorCsv.escrever(raf, objetoAtualizado,id);//escreve um novo registro  por cima do antigo
                     }else{//novo nao cabe
                         delete(id);//deleta o antigo
                         raf.seek(raf.length());//vai pro final do arquivo
-                        LeitorCsv.escrever(raf, objetoAtualizado);//escreve do 0 o novo
+                        LeitorCsv.escrever(raf, objetoAtualizado,id);//escreve um novo registro (agora atualizado) no final
                     }
                     found=true;
                 }
@@ -68,6 +82,8 @@ class Crud {
         if(!found){
             System.out.println("Arquivo nao encontrado");
         }
+
+        raf.close();
     }
 
     public void delete(int id) throws FileNotFoundException, IOException {
@@ -78,7 +94,7 @@ class Crud {
         while(!found && raf.getFilePointer()<raf.length()){
             long p1=raf.getFilePointer();//para voltar aqui caso seja esse o objeto a ser editado
             int lapide=raf.readByte();//ler lapide
-            int tam=raf.readInt();//ler tamanho do registro
+            int tam=raf.readInt()+4;//ler tamanho do registro
             byte[] ba = new byte[tam];//criar array
             raf.read(ba);//ler registro
             if(lapide==0){//se nao estiver removido
@@ -94,5 +110,7 @@ class Crud {
         if(!found){
             System.out.println("Arquivo nao encontrado");
         }
+
+        raf.close();
     }
 }

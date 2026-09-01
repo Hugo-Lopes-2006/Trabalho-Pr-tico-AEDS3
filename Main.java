@@ -6,7 +6,7 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         while(true){
             System.out.println("Selecione a opção desejada:");
-            System.out.println("1. Create");
+            System.out.println("1. Carregar");
             System.out.println("2. Read");
             System.out.println("3. Update");
             System.out.println("4. Delete");
@@ -18,7 +18,7 @@ public class Main {
             int id;
             switch (opcao) {
                 case 1 -> {
-                    crud.create();
+                    LeitorCsv.lerCsv("spotify.csv");
                 }
                 case 2 -> {
                     System.out.println("Qual o ID da musica?");
