@@ -1,7 +1,8 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Selecione a opção desejada:");
         System.out.println("1. Create");
@@ -16,10 +17,7 @@ public class Main {
         int id;
         switch (opcao) {
             case 1 -> {
-                //ler path?(talvez, tem q ver com o hayala)
-                System.out.println("Qual o path do arquivo csv?");
-                String path=sc.next();
-                crud.create(path);
+                crud.create();
             }
             case 2 -> {
                 System.out.println("Qual o ID do registro?");
@@ -44,7 +42,6 @@ public class Main {
             }
         }
 
-        sc.close();
 
     }
 }

@@ -1,8 +1,12 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-public class Crud {
+class Crud {
 
-    public void create(String path) { //fazer a carga inicial com o arquivo csv
-        
+    public void create() throws FileNotFoundException, IOException { //fazer a carga inicial com o arquivo csv
+
+        LeitorCsv.lerCsv("spotify.csv");
+
     }
 
     public void read(int id) { //
