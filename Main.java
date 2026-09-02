@@ -4,7 +4,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
-        while(true){
+        int opcao = 0;
+        while(opcao != 6){
             System.out.println("Selecione a opção desejada:");
             System.out.println("1. Carregar");
             System.out.println("2. Read");
@@ -14,7 +15,7 @@ public class Main {
             System.out.println("6. Sair");
             Crud crud=new Crud();
 
-            int opcao = sc.nextInt();
+            opcao = sc.nextInt();
             int id;
             switch (opcao) {
                 case 1 -> {
