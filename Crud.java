@@ -26,7 +26,7 @@ class Crud {
     }
 
     public void read(int id) throws FileNotFoundException, IOException {
-        
+
         RandomAccessFile raf=new RandomAccessFile("spotify.bin","rw");
         raf.readInt();//lê o cabeçalho
         boolean found=false;//se achar para de procurar no arquivo
@@ -67,13 +67,16 @@ class Crud {
                 objeto.fromByteArray(ba);//cria objeto com array de bytes
                 if(objeto.getId()==id){//se for o objeto
                     byte[] ba1=objetoAtualizado.toByteArray();//cria array de bytes do objeto novo
-                    if(ba1.length<=ba.length){//se o novo couber no espaço do antigo
+                    if (ba1.length <= (ba.length - 4)) { // O array 'ba' antigo incluía o ID. Subtraímos 4 para comparar só os dados.
                         raf.seek(p1);
-                        LeitorCsv.escrever(raf, objetoAtualizado,id);//escreve um novo registro  por cima do antigo
-                    }else{//novo nao cabe
-                        delete(id);//deleta o antigo
-                        raf.seek(raf.length());//vai pro final do arquivo
-                        LeitorCsv.escrever(raf, objetoAtualizado,id);//escreve um novo registro (agora atualizado) no final
+                        raf.writeByte(0); // Escreve Lápide
+                        raf.writeInt(ba.length - 4); // MANTÉM O TAMANHO DO ESPAÇO ANTIGO (Crucial para não quebrar a leitura)
+                        raf.writeInt(id);
+                        raf.write(ba1); // Sobrescreve os dados. O lixo no fim do registro será ignorado.
+                    } else { // novo nao cabe
+                        delete(id); // deleta o antigo
+                        raf.seek(raf.length()); // vai pro final do arquivo
+                        LeitorCsv.escrever(raf, objetoAtualizado, id); // escreve no final
                     }
                     found=true;
                 }

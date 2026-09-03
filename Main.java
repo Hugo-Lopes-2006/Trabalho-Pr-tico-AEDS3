@@ -63,6 +63,17 @@ public class Main {
                     crud.delete(id);
                 }
                 case 5 -> {
+                    System.out.println("Iniciando a ordenação externa...");
+                    try {
+                        Ordnecao ordenacao = new Ordnecao();
+                        ordenacao.ordenacaoExterna("spotify.bin");
+                        System.out.println("Ordenação concluída com sucesso!");
+                        System.out.println("Arquivo gerado: spotify_ordenado.bin");
+                    } catch (Exception e) {
+                        System.out.println("Erro ao ordenar o arquivo:");
+                        e.printStackTrace();
+                    }
+                    break;
                 }
                 case 6 -> {
                 }
@@ -70,5 +81,14 @@ public class Main {
                 }
             }
         }
+        try {
+            Conversor.binParaTxt("spotify.bin", "saida_original.txt");
+            Conversor.binParaTxt("spotify_ordenado.bin", "saida_ordenada.txt");
+            System.out.println("Conversão para TXT concluída com sucesso!");
+        } catch (Exception e) {
+            System.out.println("Erro ao converter arquivo para TXT:");
+            e.printStackTrace();
+        }
+        sc.close();
     }
 }

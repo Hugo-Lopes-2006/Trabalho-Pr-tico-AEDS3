@@ -26,14 +26,20 @@ class LeitorCsv {
         int id=0;
 
         while(sc.hasNext()){
-            Objeto objeto = Objeto.parseObjeto(sc.nextLine(),id);//lê linha e cria objeto
-            escrever(registros, objeto,id);//escreve objeto
-            id++;
+            String linha = sc.nextLine();
+            try {
+                Objeto objeto = Objeto.parseObjeto(linha,id);//lê linha e cria objeto
+                escrever(registros, objeto,id);//escreve objeto
+                id++;
+            } catch (IOException e) {
+                System.out.println("ERRO NA LINHA " + id + ": " + linha);//tentativa de ver se há algum erro na leitura do csv
+            }
         }
 
         registros.seek(0);
         registros.writeInt(id-1);//atualiza cabeçalho pra o ultimo id colocado
 
         registros.close();
+        sc.close();
     }
 }
