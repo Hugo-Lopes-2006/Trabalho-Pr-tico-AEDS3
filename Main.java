@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, Exception {
         Scanner sc = new Scanner(System.in);
         int opcao = 0;
         while(opcao != 6){
@@ -63,17 +63,14 @@ public class Main {
                     crud.delete(id);
                 }
                 case 5 -> {
+                    int numeroCaminhos,numeroRegistros;
+                    System.out.println("Digite o numero de caminhos: ");
+                    numeroCaminhos=sc.nextInt();
+                    System.out.println("Digite o numero de registros por ordenacao em memoria primaria: ");
+                    numeroRegistros=sc.nextInt();
                     System.out.println("Iniciando a ordenação externa...");
-                    try {
-                        Ordnecao ordenacao = new Ordnecao();
-                        ordenacao.ordenacaoExterna("spotify.bin");
-                        System.out.println("Ordenação concluída com sucesso!");
-                        System.out.println("Arquivo gerado: spotify_ordenado.bin");
-                    } catch (Exception e) {
-                        System.out.println("Erro ao ordenar o arquivo:");
-                        e.printStackTrace();
-                    }
-                    break;
+                    Ordenacao.ordenacaoExterna(numeroCaminhos, numeroRegistros);
+                    System.out.println("Ordenação concluída com sucesso!");
                 }
                 case 6 -> {
                 }

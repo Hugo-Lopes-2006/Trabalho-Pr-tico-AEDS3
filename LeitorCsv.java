@@ -10,7 +10,7 @@ class LeitorCsv {
         byte[] ba;//cria array de byte
         ba=objeto.toByteArray();//carrega o array de byte gerado pelo objeto
         raf.writeByte(0);//escreve lápide
-        raf.writeInt(ba.length);//escreve o tamanho do array/registro
+        raf.writeInt(ba.length+4);//escreve o tamanho do array/registro + o id que veio por fora
         raf.writeInt(id);//escreve id
         raf.write(ba);//escreve o registro
 
@@ -26,14 +26,9 @@ class LeitorCsv {
         int id=0;
 
         while(sc.hasNext()){
-            String linha = sc.nextLine();
-            try {
-                Objeto objeto = Objeto.parseObjeto(linha,id);//lê linha e cria objeto
-                escrever(registros, objeto,id);//escreve objeto
-                id++;
-            } catch (IOException e) {
-                System.out.println("ERRO NA LINHA " + id + ": " + linha);//tentativa de ver se há algum erro na leitura do csv
-            }
+            Objeto objeto = Objeto.parseObjeto(sc.nextLine(),id);//lê linha e cria objeto
+            escrever(registros, objeto,id);//escreve objeto
+            id++;
         }
 
         registros.seek(0);
