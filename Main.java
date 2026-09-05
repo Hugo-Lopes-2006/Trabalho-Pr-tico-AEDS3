@@ -80,7 +80,6 @@ public class Main {
         }
         try {
             Conversor.binParaTxt("spotify.bin", "saida_original.txt");
-            Conversor.binParaTxt("spotify_ordenado.bin", "saida_ordenada.txt");
             System.out.println("Conversão para TXT concluída com sucesso!");
         } catch (Exception e) {
             System.out.println("Erro ao converter arquivo para TXT:");

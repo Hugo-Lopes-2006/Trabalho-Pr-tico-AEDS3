@@ -4,9 +4,9 @@ import java.io.RandomAccessFile;
 public class Ordenacao {
 
     public static void ordenacaoExterna(int numeroCaminhos, int numeroRegistros) throws Exception {
-        RandomAccessFile raf= new RandomAccessFile("spotify.bin","rw");
         distribuir(numeroCaminhos, numeroRegistros);
         intercalar(numeroCaminhos,numeroRegistros);
+
     }
 
     private static void distribuir(int numeroCaminhos, int numeroRegistros) throws Exception {//ele vai abrir o arquivo e ler somente o que precisa dos 100 primeiros registros
@@ -51,39 +51,74 @@ public class Ordenacao {
     }
 
     private static void intercalar(int numeroCaminhos, int numeroRegistros) throws Exception {
-        RandomAccessFile arquiTemp=new RandomAccessFile[numeroCaminhos];
-        Objeto[] regitrosAtuais=new Objeto[numeroCaminhos];
+            RandomAccessFile[] arquivosTemp = new RandomAccessFile[numeroCaminhos];
+            Objeto[] registrosAtuais = new Objeto[numeroCaminhos];
 
-        for(int i=0;i<numeroCaminhos;i++){
-            arquiTemp[i]=new RandomAccessFile("tmp"+i+".bin", "r");
-            regitrosAtuais[i]= lerProximo(arquiTemp[i]);
+            //abre os arquivos temporários para leitura e puxa o primeiro registro de cada
+            for (int i = 0; i < numeroCaminhos; i++) {
+                arquivosTemp[i] = new RandomAccessFile("tmp" + i + ".bin", "r");
+                registrosAtuais[i] = lerProximo(arquivosTemp[i]);
+            }
+
+            //prepara o arquivo final
+            RandomAccessFile rafFinal = new RandomAccessFile("spotify_Ordenado.bin", "rw");
+            rafFinal.writeInt(0); // Espaço reservado para o cabeçalho
+            int ultimoId = 0;
+
+            //loop de merge (intercalação)
+            while (true) {
+                int menorIndice = -1;
+
+                // varre o vetor de registros puxados para encontrar o que tem o menor ID
+                for (int i = 0; i < numeroCaminhos; i++) {
+                    if (registrosAtuais[i] != null) {
+                        if (menorIndice == -1 || registrosAtuais[i].getId() < registrosAtuais[menorIndice].getId()) {
+                            menorIndice = i;
+                        }
+                    }
+                }
+
+                // se não encontrou nenhum valido, acabaram todos os registros de todos os arquivos
+                if (menorIndice == -1) {
+                    break;
+                }
+
+                // grava o "vencedor" no arquivo final ordenado
+                LeitorCsv.escrever(rafFinal, registrosAtuais[menorIndice], registrosAtuais[menorIndice].getId());
+                ultimoId = registrosAtuais[menorIndice].getId();
+
+                // avança a leitura apenas no arquivo temporario de onde tiramos o registro vencedor
+                registrosAtuais[menorIndice] = lerProximo(arquivosTemp[menorIndice]);
+            }
+
+            // finaliza: atualiza cabeçalho e apaga o "lixo" temporario
+            rafFinal.seek(0);
+            rafFinal.writeInt(ultimoId);
+            rafFinal.close();
+
+            for (int i = 0; i < numeroCaminhos; i++) {
+                arquivosTemp[i].close();
+                new File("tmp" + i + ".bin").delete();
+            }
         }
 
-        RandomAccessFile rafFinal=new RandomAccessFile ("spotify_ord.bin", "rw");
-        rafFinal.writeInt(0);//espaço para o cabeçalho
-        int ultimoId=0;
+        // função auxiliar para garantir a leitura correta dos bytes do caminho temporário
+        private static Objeto lerProximo(RandomAccessFile raf) throws Exception {
+            while (raf.getFilePointer() < raf.length()) {
+                byte lapide = raf.readByte();
+                int tamanhoBa = raf.readInt();
 
-        while(true){
-            int menorIndice=-1;
-            for(int i=0;i<numeroCaminhos;i++){
-                if(regitrosAtuais[i]!=null && (menorIndice==-1 || regitrosAtuais[i].getId()<regitrosAtuais[menorIndice].getId())){
-                    menorIndice=i;
+                byte[] ba = new byte[tamanhoBa];
+                raf.read(ba);
+
+                if (lapide == 0) {
+                    Objeto obj = new Objeto();
+                    obj.fromByteArray(ba); // Reconstrói o objeto a partir dos bytes
+                    return obj;
                 }
             }
-            if(menorIndice==-1) break;
-            // tive que sair, mas dei uma adiantada, devo voltar ate uma hora da tarde, ai se tu nao comecou toma uma helpada
-
+            return null; // Arquivo temporário chegou ao fim
         }
-
-
-    }
-
-
-
-
-
-
-
 
 
     //quicksort trivial

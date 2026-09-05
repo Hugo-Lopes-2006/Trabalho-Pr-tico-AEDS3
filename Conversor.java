@@ -13,7 +13,7 @@ public class Conversor {
 
         while (raf.getFilePointer() < raf.length()) {
             byte lapide = raf.readByte();
-            int tamTotal = raf.readInt() + 4;
+            int tamTotal = raf.readInt();
             byte[] ba = new byte[tamTotal];
             raf.read(ba);
 
