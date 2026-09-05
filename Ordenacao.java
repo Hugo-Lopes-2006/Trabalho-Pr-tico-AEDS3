@@ -20,7 +20,7 @@ public class Ordenacao {
 
         while (raf.getFilePointer() < raf.length()) {
             Objeto[] array=new Objeto[numeroRegistros];//cria um array de objetos
-            
+
             int quantidade=0;//total de registros no array, para definir o alto no quicksort caso o array nao esteja completo
 
             for(;quantidade<numeroRegistros && raf.getFilePointer() < raf.length();){//le o tanto de registros que o usuario pediu na memoria primaria e para se chegar ao fim do arquivo
@@ -51,12 +51,34 @@ public class Ordenacao {
     }
 
     private static void intercalar(int numeroCaminhos, int numeroRegistros) throws Exception {
+        RandomAccessFile arquiTemp=new RandomAccessFile[numeroCaminhos];
+        Objeto[] regitrosAtuais=new Objeto[numeroCaminhos];
 
-        //tem q fazer, genuinamente meu cérebro congelou
+        for(int i=0;i<numeroCaminhos;i++){
+            arquiTemp[i]=new RandomAccessFile("tmp"+i+".bin", "r");
+            regitrosAtuais[i]= lerProximo(arquiTemp[i]);
+        }
+
+        RandomAccessFile rafFinal=new RandomAccessFile ("spotify_ord.bin", "rw");
+        rafFinal.writeInt(0);//espaço para o cabeçalho
+        int ultimoId=0;
+
+        while(true){
+            int menorIndice=-1;
+            for(int i=0;i<numeroCaminhos;i++){
+                if(regitrosAtuais[i]!=null && (menorIndice==-1 || regitrosAtuais[i].getId()<regitrosAtuais[menorIndice].getId())){
+                    menorIndice=i;
+                }
+            }
+            if(menorIndice==-1) break;
+            // tive que sair, mas dei uma adiantada, devo voltar ate uma hora da tarde, ai se tu nao comecou toma uma helpada
+
+        }
+
 
     }
 
-    
+
 
 
 
@@ -81,7 +103,7 @@ public class Ordenacao {
     private static int particionar(Objeto[] array, int baixo, int alto) {
         int pivo = array[alto].getId();
         int i = baixo - 1;
-    
+
         for (int j = baixo; j < alto; j++) {
             if (array[j].getId() <= pivo) {
                 i++;
