@@ -67,13 +67,19 @@ class Crud {
                 objeto.fromByteArray(ba);//cria objeto com array de bytes
                 if(objeto.getId()==id){//se for o objeto
                     byte[] ba1=objetoAtualizado.toByteArray();//cria array de bytes do objeto novo
-                    if(ba1.length+4/*+4 do id que nao esta no objeto*/<=ba.length){//se o novo couber no espaço do antigo
+                    if(ba1.length + 4 <= ba.length) { // se o novo couber no espaço antigo
                         raf.seek(p1);
-                        LeitorCsv.escrever(raf, objetoAtualizado,id);//escreve um novo registro  por cima do antigo
-                    }else{ // novo nao cabe
-                        delete(id); // deleta o antigo
-                        raf.seek(raf.length()); // vai pro final do arquivo
-                        LeitorCsv.escrever(raf, objetoAtualizado, id); // escreve no final o novo objetoAtualizado
+                        raf.writeByte(0);        // escreve lápide ativa
+                        raf.writeInt(ba.length); // MANTÉM O TAMANHO ORIGINAL para não quebrar o salto na leitura
+                        raf.writeInt(id);        // escreve o id
+                        raf.write(ba1);          // escreve os novos dados
+                        // O espaço que sobrar será naturalmente pulado pelo read() sem quebrar o arquivo
+                    } else { // novo não cabe
+                        raf.seek(p1);
+                        raf.writeByte(1); // deleta o registro antigo diretamente in-place
+
+                        raf.seek(raf.length()); // vai para o final do arquivo
+                        LeitorCsv.escrever(raf, objetoAtualizado, id); // anexa o novo registro
                     }
                     found=true;
                 }
