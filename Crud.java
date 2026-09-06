@@ -56,20 +56,21 @@ class Crud {
         raf.readInt();//lê o cabeçalho
         boolean found=false;//se achar para de procurar no arquivo
         while(!found && raf.getFilePointer()<raf.length()){
-            long p1=raf.getFilePointer();//salva endereço para voltar aqui
             int lapide=raf.readByte();//ler lapide
             int tam=raf.readInt();//ler tamanho do registro
+            long p1=raf.getFilePointer();//salva endereço para voltar aqui
             byte[] ba = new byte[tam];//ler registro
             raf.read(ba);
 
             if(lapide==0){//se nao estiver removido
                 Objeto objeto=new Objeto();
                 objeto.fromByteArray(ba);//cria objeto com array de bytes
+                System.out.println("ID lido do arquivo: " + objeto.getId() + " | ID procurado: " + id);
                 if(objeto.getId()==id){//se for o objeto
                     byte[] ba1=objetoAtualizado.toByteArray();//cria array de bytes do objeto novo
-                    if(ba1.length+4/*+4 do id que nao esta no objeto*/<=ba.length){//se o novo couber no espaço do antigo
+                    if(ba1.length<=ba.length){//se o novo couber no espaço do antigo
                         raf.seek(p1);
-                        LeitorCsv.escrever(raf, objetoAtualizado,id);//escreve um novo registro  por cima do antigo
+                        raf.write(ba1);
                     }else{ // novo nao cabe
                         delete(id); // deleta o antigo
                         raf.seek(raf.length()); // vai pro final do arquivo

@@ -72,19 +72,11 @@ public class Main {
                     Ordenacao.ordenacaoExterna(numeroCaminhos, numeroRegistros);
                     System.out.println("Ordenação concluída com sucesso!");
                 }
-                case 6 -> {
-                }
                 default -> {
                 }
             }
         }
-        try {
-            Conversor.binParaTxt("spotify.bin", "saida_original.txt");
-            System.out.println("Conversão para TXT concluída com sucesso!");
-        } catch (Exception e) {
-            System.out.println("Erro ao converter arquivo para TXT:");
-            e.printStackTrace();
-        }
+
         sc.close();
     }
 }

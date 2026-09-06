@@ -10,8 +10,7 @@ class LeitorCsv {
         byte[] ba;//cria array de byte
         ba=objeto.toByteArray();//carrega o array de byte gerado pelo objeto
         raf.writeByte(0);//escreve lápide
-        raf.writeInt(ba.length+4);//escreve o tamanho do array/registro + o id que veio por fora
-        raf.writeInt(id);//escreve id
+        raf.writeInt(ba.length);//escreve o tamanho do array/registro + o id que veio por fora
         raf.write(ba);//escreve o registro
 
     }

@@ -41,7 +41,7 @@ class Objeto {
         String track_id = sc.next(); //ler track_id
 
 
-        String tmpString1=sc.next();
+        String tmpString1=sc.next();//linha para artista
         String artistsLinha="";
         if(tmpString1.charAt(0)=='"' && tmpString1.charAt(tmpString1.length()-1)!='"'){//se possuir ',' dentro do campo
             while(tmpString1.charAt(tmpString1.length()-1)!='"'){//até a string terminar com "
@@ -127,6 +127,7 @@ class Objeto {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(baos);
 
+        dos.writeInt(id);//escreve id
         dos.writeUTF(track_id);//escreve track_id
 
         int tmp=artists.length;//define quantidade de nomes a serem escritos
