@@ -47,3 +47,9 @@ Ao iniciar, um menu de 6 opções será exibido:
 
 - O acesso a disco é minimizado e controlado via ponteiros (`RandomAccessFile.seek()`).
 - O projeto adota a estratégia de "tamanho dinâmico" de registro. Portanto, o arquivo binário possui no cabeçalho o último ID gerado e, em cada registro, um indicador de tamanho para saltos precisos durante a leitura sequencial.
+
+
+
+## Link do Vídeo para correção do Tp1
+
+https://youtu.be/p4OwuT4bDmM
